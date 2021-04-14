@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html data-blockbyte-bs-uid="16440"><head><style data-merge-styles="true"></style>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" href="/favicon.png">
+<title>Brython speed compared to CPython</title>
+<style>
+body{
+    padding-left: 2em;
+}
+td{
+    vertical-align: top;
+    padding: 3px;
+}
+td, th{
+    border-style: solid;
+    border-width: 0px 0px 1px 0px;
+    border-color: #000;
+}
+pre{
+    margin: 0px 0px 0px 5px;
+}
+</style>
+<style class="blockbyte-bs-style" data-name="content">body>div#blockbyte-bs-indicator>div{opacity:0;pointer-events:none}body>iframe#blockbyte-bs-sidebar.blockbyte-bs-visible,body>iframe#blockbyte-bs-overlay.blockbyte-bs-visible{opacity:1;pointer-events:auto}body.blockbyte-bs-noscroll{overflow:hidden !important}body>div#blockbyte-bs-indicator>div{position:absolute;transform:translate3d(-40px, 0, 0);top:0;left:0;width:40px !important;height:100%;background:rgba(0,0,0,0.5);border-radius:0 10px 10px 0;transition:opacity 0.3s, transform 0.3s;z-index:2}body>div#blockbyte-bs-indicator>div>span{-webkit-mask:no-repeat center/32px;-webkit-mask-image:url(chrome-extension://jdbnofccmhefkmjbkkdkfiicjkgofkdh/img/icon-bookmark.svg);background-color:#ffffff;position:absolute;display:block;top:0;left:0;width:100%;height:100%}body>div#blockbyte-bs-indicator[data-pos='right']{left:auto;right:0}body>div#blockbyte-bs-indicator[data-pos='right']>div{transform:translate3d(40px, 0, 0);left:auto;right:0;border-radius:10px 0 0 10px}body>div#blockbyte-bs-indicator.blockbyte-bs-fullHeight>div{border-radius:0}body>div#blockbyte-bs-indicator.blockbyte-bs-hover>div{transform:translate3d(0, 0, 0);opacity:1}body>div#blockbyte-bs-indicator[data-pos='left'].blockbyte-bs-has-lsb{height:100% !important;top:0 !important}body>div#blockbyte-bs-indicator[data-pos='left'].blockbyte-bs-has-lsb>div{background:transparent}body>div#blockbyte-bs-indicator[data-pos='left'].blockbyte-bs-has-lsb>div>span{-webkit-mask-position-y:20px}body>iframe#blockbyte-bs-sidebar{width:350px;max-width:none;height:0;z-index:2147483646;background-color:rgba(0,0,0,0.6) !important;speak:none;border:none;display:block !important;transform:translate3d(-350px, 0, 0);transition:width 0s 0.3s, height 0s 0.3s, opacity 0.3s, transform 0.3s}body>iframe#blockbyte-bs-sidebar[data-pos='right']{left:auto;right:0;transform:translate3d(350px, 0, 0)}body>iframe#blockbyte-bs-sidebar.blockbyte-bs-visible{width:calc(100% + 350px);height:100%;transform:translate3d(0, 0, 0);transition:opacity 0.3s, transform 0.3s}body>iframe#blockbyte-bs-sidebar.blockbyte-bs-hideMask{background:none !important}body>iframe#blockbyte-bs-sidebar.blockbyte-bs-hideMask:not(.blockbyte-bs-hover){width:calc(350px + 50px)}body>iframe#blockbyte-bs-overlay{width:100%;max-width:none;height:100%;z-index:2147483647;border:none;speak:none;background:rgba(0,0,0,0.5) !important;transition:opacity 0.3s}
+</style>
+<script data-ad-client="ca-pub-2246970680812181" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+<body>
+<h2>Brython 3.8.9 performance compared to CPython 3.8.0</h2>
+User agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:76.0) Gecko/20100101 Firefox/76.0
+<p>
+</p><table>
+<tbody><tr>
+<th>Test</th>
+<th>Brython<br>(100 = CPython)</th>
+<th>Code</th>
+</tr>
+<tr><td>simple assignment</td><td align="right"><b>66</b></td><td><pre>for i in range(1000000):
+    a = 1</pre></td></tr>
+<tr><td>augmented assignment</td><td align="right"><b>77</b></td><td><pre>a = 0
+for i in range(1000000):
+    a += 1</pre></td></tr>
+<tr><td>simple assignment to float</td><td align="right"><b>184</b></td><td><pre>for i in range(1000000):
+    a = 1.0</pre></td></tr>
+<tr><td>big integers</td><td align="right"><b>3659</b></td><td><pre>for i in range(100):
+    2 ** 60</pre></td></tr>
+<tr><td>build dictionary</td><td align="right"><b>318</b></td><td><pre>for i in range(1000000):
+    a = {0: 0}</pre></td></tr>
+<tr><td>build dictionary 2</td><td align="right"><b>143</b></td><td><pre>d = {}
+for i in range(100000):
+    d[i] = i</pre></td></tr>
+<tr><td>set dictionary item</td><td align="right"><b>132</b></td><td><pre>a = {0: 0}
+for i in range(1000000):
+    a[0] = i</pre></td></tr>
+<tr><td>build set</td><td align="right"><b>625</b></td><td><pre>for i in range(1000000):
+    a = {0, 2.7, "x"}</pre></td></tr>
+<tr><td>build list</td><td align="right"><b>71</b></td><td><pre>for i in range(1000000):
+    a = [1, 2, 3]</pre></td></tr>
+<tr><td>set list item</td><td align="right"><b>98</b></td><td><pre>a = [0]
+for i in range(1000000):
+    a[0] = i</pre></td></tr>
+<tr><td>integer addition</td><td align="right"><b>196</b></td><td><pre>a, b, c = 1, 2, 3
+for i in range(1000000):
+    a + b + c</pre></td></tr>
+<tr><td>string addition</td><td align="right"><b>142</b></td><td><pre>a, b, c = 'a', 'b', 'c'
+for i in range(1000000):
+    a + b + c</pre></td></tr>
+<tr><td>cast int to string</td><td align="right"><b>127</b></td><td><pre>for i in range(100000):
+    str(i)</pre></td></tr>
+<tr><td>create function without arguments</td><td align="right"><b>446</b></td><td><pre>for i in range(1000000):
+    def f():
+        pass</pre></td></tr>
+<tr><td>create function, single positional argument</td><td align="right"><b>464</b></td><td><pre>for i in range(1000000):
+    def f(x):
+        pass</pre></td></tr>
+<tr><td>create function, complex arguments</td><td align="right"><b>655</b></td><td><pre>for i in range(1000000):
+    def f(x, y=1, *args, **kw):
+        pass</pre></td></tr>
+<tr><td>function call</td><td align="right"><b>804</b></td><td><pre>def f(x):
+    return x
+for i in range(1000000):
+    f(i)</pre></td></tr>
+<tr><td>function call, complex arguments</td><td align="right"><b>1234</b></td><td><pre>def f(x, y=0, *args, **kw):
+    return x
+for i in range(100000):
+    f(i, 5, 6, a=8)</pre></td></tr>
+<tr><td>create simple class</td><td align="right"><b>498</b></td><td><pre>for i in range(10000):
+    class A:
+        pass</pre></td></tr>
+<tr><td>create class with init</td><td align="right"><b>572</b></td><td><pre>for i in range(10000):
+    class A:
+        def __init__(self, x):
+            self.x = x</pre></td></tr>
+<tr><td>create instance of simple class</td><td align="right"><b>241</b></td><td><pre>class A:
+    pass
+
+for i in range(1000000):
+    A()</pre></td></tr>
+<tr><td>create instance of class with init</td><td align="right"><b>1123</b></td><td><pre>class A:
+    def __init__(self, x):
+        self.x = x
+
+for i in range(100000):
+    A(i)</pre></td></tr>
+<tr><td>call instance method</td><td align="right"><b>2551</b></td><td><pre>class A:
+    def __init__(self, x):
+        self.x = x
+
+    def f(self):
+        return self.x
+
+a = A(1)
+for i in range(100000):
+    a.f()</pre></td></tr>
+</tbody></table></body></html>

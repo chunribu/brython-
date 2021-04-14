@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Brython中文网-教程</title>
+	<meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <meta name="description" content="Brython中文网|教程-本教程说明了如何使用Python编程语言开发在浏览器中运行的应用程序。我们将以编写计算器为例。
+您将需要一个文本编辑器，当然还需要一个可以访问互联网的浏览器。">
+	<!-- <script type="text/javascript" src="/brython.js"></script> -->
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.8.9/brython.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.8.9/brython_stdlib.js"></script>
+	<link rel="stylesheet" href="/theme/metro-all.min.css">
+	<link rel="stylesheet" type="text/css" href="../theme/prism.css">
+	<style type="text/css">
+		xmp {
+			background-color: #f5f2f0;
+		}
+		#tuto-content h3 {
+			padding-top: 52px;
+		}
+	</style>
+    <script data-ad-client="ca-pub-2246970680812181" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+<body onload="brython()">
+	<!--banner-->
+	<script type="text/python">
+		from browser import document, html
+
+		menuList = [{'title': '教程', 'link': 'tutorial.html'},
+			{'title': '示例', 'link': 'demo.html'},
+			{'title': '文档', 'link': 'documentation.html'},
+			{'title': '控制台', 'link': 'console.html'},
+			{'title': '下载', 'link': 'https://github.com/brython-dev/brython/releases'}]
+		menu = document['menu']
+		for i in menuList:
+			_a = html.A(i['title'], href=i['link'])
+			_li = html.LI()
+			_li <= _a
+			menu <= _li
+	</script>
+	<div id="banner" data-role='appbar' data-expand-point='md' class="">
+		<a href="../index.html" class="brand no-hover">
+			<h3 class="fg-blue"> Brython </h3>
+			<span class="badge inline bg-blue fg-white">中文网</span>
+		</a>
+		<ul id="menu" class="app-bar-menu"></ul>
+	</div> 
+
+	<div style="padding-top:52px;display:table; width:100%;">
+		<div style="display: table-row">
+			<div class="v-menu shadow-2" style="display: table-cell;height:calc(100vh - 52px)!important; 
+			width:17%; min-width:160px; vertical-align: top;">
+				<ul id="side-menu" style="margin:0 3px;">
+					<br>
+					<li ><a href="#page-structure" class="reduce-1">页面结构</a></li>
+					<li ><a href="#text_formatting_with_html_tags" class="reduce-1">内容标签化</a></li>
+					<li ><a href="#drawing_the_calculator" class="reduce-1">绘制计算器</a></li>
+					<li ><a href="#event_handling" class="reduce-1">事件处理</a></li>
+					<li ><a href="#complete_program" class="reduce-1">完成编码</a></li>
+					<li ><a href="#result" class="reduce-1">结果</a></li>
+				</ul>
+			</div>
+
+			<div class="" style="display: block;padding:20px;">
+				<div id="tuto-content">
+					本教程说明了如何使用Python编程语言开发在浏览器中运行的应用程序。我们将以编写计算器为例。
+您将需要一个文本编辑器，当然还需要一个可以访问互联网的浏览器。<br>
+本教程的内容假定您至少具有HTML（通用页面结构，最常用的标签），样式表（CSS）和Python语言的基本知识。
+在文本编辑器中，创建具有以下内容的HTML页面：
+<xmp >
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/brython@3.8.9/brython.min.js">
+    </script>
+</head>
+
+<body onload="brython()">
+
+<script type="text/python">
+from browser import document
+
+document <= "Hello !"
+</script>
+
+
+</body>
+
+</html>
+</xmp>
+在一个空目录中，将此页面另存为index.html。要在浏览器中阅读它，您有两个选择：<br>
+1)使用“文件/打开”菜单：这是最简单的解决方案。它为高级使用带来了一些限制，但在本教程中效果很好<br>
+2)启动一个Web服务器：例如，如果您的机器上有python.org提供的Python解释器，则在文件目录中运行python -m http.server，然后在浏览器地址栏中输入localhost:8000/index.html<br>
+当您打开页面时，应该看到消息“ Hello！”。打印在浏览器窗口上。
+    
+<h3 id="page-structure">页面结构</h3>
+让我们看一下页面内容。在head区域中，我们加载脚本brython.js：这是Brython引擎，该程序将查找并执行页面中包含的Python脚本。在本例中，我们从CDN获得它，因此PC上没有任何安装。注意版本号（brython@3.8.9）：可以为每个新的Brython版本进行更新。<br>
+body标记具有onload ="brython()"属性。这意味着页面完成加载后，浏览器必须调用函数brython()，该函数在页面加载的Brython引擎中定义。该函数搜索所有具有type ="text/python"属性的script标记并执行它们。<br>
+我们的index.html页面嵌入了以下脚本：
+<xmp>
+from browser import document
+
+document <= "Hello !"
+</xmp>
+这是一个标准的Python程序，首先导入模块浏览器（在本例中为Brython引擎brython.js随附的模块）。该模块具有一个属性document, document指的是浏览器窗口中显示的内容。<br>
+要将文本添加到document中-也就是在浏览器中显示文本-Brython使用的语法是
+<xmp>
+document <= "Hello !"
+</xmp>
+您可以将<=符号视为左箭头：document“接收”一个新元素，此处为字符串“ Hello！”。稍后您将看到，总是可以使用标准化的DOM语法与页面进行交互，Brython提供了一些捷径来使代码不再那么冗长。
+    
+<h3 id="text_formatting_with_html_tags">内容标签化</h3>
+HTML标签允许文本格式设置，例如以粗体字母（B标签），斜体（I标签）等形式书写。<br>
+对于Brython，这些标签可利用browser包的html模块中定义的功能来实现。使用方法如下：
+<xmp>
+from browser import document, html
+
+document <= html.B("Hello !")</xmp>
+标签可以嵌套：
+<xmp>document <= html.B(html.I("Hello !"))</xmp>
+标签和字符串也可以相互添加：
+<xmp>document <= html.B("Hello, ") + "world !"</xmp>
+标签函数的第一个参数可以是字符串，数字，另一个标签。它也可以是Python中“可迭代的”（list，comprehension，generator）：在这种情况下，将迭代中生成的所有元素都添加到标签内：
+<xmp>document <= html.UL(html.LI(i) for i in range(5))</xmp>
+标签属性作为关键字参数传递给函数：
+<xmp>html.A("Brython", href="http://brython.info")</xmp>
+
+<h3 id="drawing_the_calculator">绘制计算器</h3>
+我们可以用HTML表格绘制一个计算器。<br>
+第一行由结果区域组成，后跟一个重置按钮。接下来的3行是计算器的数字和运算符。
+<xmp>from browser import document, html
+
+calc = html.TABLE()
+calc <= html.TR(html.TH(html.DIV("0", id="result"), colspan=3) +
+                html.TH("C", id="clear"))
+lines = ["789/",
+         "456*",
+         "123-",
+         "0.=+"]
+
+calc <= (html.TR(html.TD(x) for x in line) for line in lines)
+
+document <= calc</xmp>
+请注意使用Python生成器来减小程序大小，同时保持可读性。<br>
+让我们来添加样式，以使计算器看起来更好：
+<xmp><style>
+*{
+    font-family: sans-serif;
+    font-weight: normal;
+    font-size: 1.1em;
+}
+td{
+    background-color: #ccc;
+    padding: 10px 30px 10px 30px;
+    border-radius: 0.2em;
+    text-align: center;
+    cursor: default;
+}
+#result{
+    border-color: #000;
+    border-width: 1px;
+    border-style: solid;
+    padding: 10px 30px 10px 30px;
+    text-align: right;
+}
+</style>
+</xmp>
+<h3 id="event_handling">事件处理</h3>
+下一步是在用户按下计算器按键时触发动作：<br>
+1）数字和运算：在结果区域中打印数字或运算<br>
+2）=符号：执行操作并打印结果，如果输入无效，则显示错误消息<br>
+3）C符号：重置结果区域<br>
+要处理打印在页面中的元素，程序首先需要获得对它们的引用。这些按钮已被创建为<TD>标签。为了获得所有这些标签的引用，语法是
+<xmp>document.select（"td"）</xmp>
+传递给select()方法的参数是CSS选择器。最常用的是：标记名("td")，元素的id属性("#result")或其属性"class"(".classname")。select()的结果始终是元素列表。<br>
+页面元素上可能发生的事件具有标准化名称：当用户单击按钮时，将触发名为“cick”的事件。在程序中，此事件会激发功能的执行。元素，事件和功能之间的关联由语法定义
+<xmp>element.bind("click", action)</xmp>
+对于计算器，我们可以通过以下方式将相同功能与所有按钮上的“ click”事件相关联：
+<xmp>for button in document.select("td"):
+    button.bind("click", action)</xmp>
+为了符合Python语法，必须在程序中的某个位置定义action函数。这样的“回调”函数采用单个参数，即表示事件的对象。
+
+<h3 id="complete_program">完成编码</h3>
+这是实现一个简易计算器的代码。最重要的部分是函数action(event)。
+<pre><code class="language-python"><xmp >from browser import document, html
+
+# Construction de la calculatrice
+calc = html.TABLE()
+calc <= html.TR(html.TH(html.DIV("0", id="result"), colspan=3) +
+                html.TD("C"))
+lines = ["789/", "456*", "123-", "0.=+"]
+
+calc <= (html.TR(html.TD(x) for x in line) for line in lines)
+
+document <= calc
+
+result = document["result"] # direct acces to an element by its id
+
+def action(event):
+    """Handles the "click" event on a button of the calculator."""
+    # The element the user clicked on is the attribute "target" of the
+    # event object
+    element = event.target
+    # The text printed on the button is the element's "text" attribute
+    value = element.text
+    if value not in "=C":
+        # update the result zone
+        if result.text in ["0", "error"]:
+            result.text = value
+        else:
+            result.text = result.text + value
+    elif value == "C":
+        # reset
+        result.text = "0"
+    elif value == "=":
+        # execute the formula in result zone
+        try:
+            result.text = eval(result.text)
+        except:
+            result.text = "error"
+
+# Associate function action() to the event "click" on all buttons
+for button in document.select("td"):
+    button.bind("click", action)
+</xmp></code></pre>
+<h3 id="result">结果</h3>
+<script type="text/python">
+from browser import document, html
+
+# Construction de la calculatrice
+calc = html.TABLE()
+calc <= html.TR(html.TH(html.DIV("0", id="calc"), colspan=3) +
+                html.TD("C"))
+lines = ["789/", "456*", "123-", "0.=+"]
+
+calc <= (html.TR(html.TD(x) for x in line) for line in lines)
+
+document['tuto-content'].insertBefore(calc, document['result'].nextSibling)
+
+result = document["calc"] # direct acces to an element by its id
+
+def action(event):
+    """Handles the "click" event on a button of the calculator."""
+    # The element the user clicked on is the attribute "target" of the
+    # event object
+    element = event.target
+    # The text printed on the button is the element's "text" attribute
+    value = element.text
+    if value not in "=C":
+        # update the result zone
+        if result.text in ["0", "error"]:
+            result.text = value
+        else:
+            result.text = result.text + value
+    elif value == "C":
+        # reset
+        result.text = "0"
+    elif value == "=":
+        # execute the formula in result zone
+        try:
+            result.text = eval(result.text)
+        except:
+            result.text = "error"
+
+# Associate function action() to the event "click" on all buttons
+for button in document.select("td"):
+    button.bind("click", action)
+</script>
+<style>
+#tuto-content {
+    font-family: sans-serif;
+    font-weight: normal;
+    font-size: 1.1em;
+}
+#tuto-content td{
+    background-color: #ccc;
+    padding: 10px 30px 10px 30px;
+    border-radius: 0.2em;
+    text-align: center;
+    cursor: default;
+}
+#calc {
+    border-color: #000;
+    border-width: 1px;
+    border-style: solid;
+    padding: 10px 30px 10px 30px;
+    text-align: right;
+}
+</style>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="/theme/metro.min.js"></script>
+	<script type="text/javascript" src="../theme/prism.js"></script>
+</body>
+</html>

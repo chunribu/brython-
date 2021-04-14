@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Standard distribution</title>
+</head>
+<body>
+<div>
+	<table width="100%" >
+<tbody><tr>
+<td id="content" style="vertical-align:top;">
+&nbsp;<h1>Brython distribution vs CPython 3.8</h1>
+<div style="padding-left:30px;">
+<div>*表示Brython版本与CPython不同</div>
+<table>
+<tbody><tr>
+<th>目录</th>
+<th>两者共有</th>
+<th>Brython独有</th>
+<th>CPython独有</th></tr>
+<tr><td valign="top">Lib</td>
+<td style="vertical-align:top;">_collections_abc.py
+<br>_compat_pickle.py
+<br>_dummy_thread.py
+<br>_markupbase.py
+<br>*_pydecimal.py
+<br>_py_abc.py
+<br>_threading_local.py
+<br>_weakrefset.py
+<br>__future__.py
+<br>abc.py
+<br>antigravity.py
+<br>argparse.py
+<br>base64.py
+<br>bdb.py
+<br>bisect.py
+<br>calendar.py
+<br>cmd.py
+<br>*code.py
+<br>codecs.py
+<br>codeop.py
+<br>colorsys.py
+<br>configparser.py
+<br>contextlib.py
+<br>contextvars.py
+<br>copy.py
+<br>copyreg.py
+<br>csv.py
+<br>*dataclasses.py
+<br>datetime.py
+<br>decimal.py
+<br>difflib.py
+<br>doctest.py
+<br>enum.py
+<br>fnmatch.py
+<br>formatter.py
+<br>fractions.py
+<br>functools.py
+<br>genericpath.py
+<br>getopt.py
+<br>gettext.py
+<br>glob.py
+<br>*heapq.py
+<br>hmac.py
+<br>imp.py
+<br>inspect.py
+<br>io.py
+<br>ipaddress.py
+<br>keyword.py
+<br>linecache.py
+<br>locale.py
+<br>mimetypes.py
+<br>nntplib.py
+<br>ntpath.py
+<br>numbers.py
+<br>opcode.py
+<br>operator.py
+<br>optparse.py
+<br>*os.py
+<br>pathlib.py
+<br>*pdb.py
+<br>*pickle.py
+<br>*pkgutil.py
+<br>*platform.py
+<br>posixpath.py
+<br>pprint.py
+<br>profile.py
+<br>pydoc.py
+<br>py_compile.py
+<br>queue.py
+<br>quopri.py
+<br>re.py
+<br>reprlib.py
+<br>selectors.py
+<br>shlex.py
+<br>shutil.py
+<br>*signal.py
+<br>site.py
+<br>socket.py
+<br>sre_compile.py
+<br>sre_constants.py
+<br>sre_parse.py
+<br>*stat.py
+<br>*string.py
+<br>stringprep.py
+<br>struct.py
+<br>subprocess.py
+<br>sysconfig.py
+<br>tarfile.py
+<br>tempfile.py
+<br>textwrap.py
+<br>this.py
+<br>threading.py
+<br>timeit.py
+<br>token.py
+<br>tokenize.py
+<br>traceback.py
+<br>*turtle.py
+<br>types.py
+<br>*typing.py
+<br>uu.py
+<br>uuid.py
+<br>warnings.py
+<br>weakref.py
+<br>*webbrowser.py
+<br>zipfile.py
+<br>zipimport.py</td>
+<td style="vertical-align:top;">_abcoll.py
+<br>_codecs.py
+<br>_collections.py
+<br>_contextvars.py
+<br>_csv.py
+<br>_frozen_importlib.py
+<br>_frozen_importlib_external.py
+<br>_functools.py
+<br>_imp.py
+<br>_io.py
+<br>_operator.py
+<br>_pydecimal.py
+<br>_queue.py
+<br>_random.py
+<br>_socket.py
+<br>_sre.py
+<br>_struct.py
+<br>_sysconfigdata.py
+<br>_sysconfigdata_0_brython_.py
+<br>_testcapi.py
+<br>_thread.py
+<br>_weakref.py
+<br>.bundle-ignore
+<br>atexit.py
+<br>binascii.py
+<br>cmath.py
+<br>code.py
+<br>dataclasses.py
+<br>errno.py
+<br>external_import.py
+<br>faulthandler.py
+<br>gc.py
+<br>heapq.py
+<br>interpreter.py
+<br>itertools.py
+<br>os.py
+<br>pdb.py
+<br>pickle.py
+<br>pkgutil.py
+<br>platform.py
+<br>pwd.py
+<br>select.py
+<br>signal.py
+<br>stat.py
+<br>string.py
+<br>sys.py
+<br>tb.py
+<br>time.py
+<br>turtle.py
+<br>typing.py
+<br>VFS_import.py
+<br>webbrowser.py
+<br>zlib.py</td>
+<td style="vertical-align:top;">aifc.py
+<br>ast.py
+<br>asynchat.py
+<br>asyncore.py
+<br>binhex.py
+<br>bz2.py
+<br>cgi.py
+<br>cgitb.py
+<br>chunk.py
+<br>compileall.py
+<br>cProfile.py
+<br>crypt.py
+<br>dis.py
+<br>dummy_threading.py
+<br>filecmp.py
+<br>fileinput.py
+<br>ftplib.py
+<br>getpass.py
+<br>gzip.py
+<br>hashlib.py
+<br>imaplib.py
+<br>imghdr.py
+<br>lzma.py
+<br>mailbox.py
+<br>mailcap.py
+<br>module1.py
+<br>modulefinder.py
+<br>netrc.py
+<br>nturl2path.py
+<br>pickletools.py
+<br>pipes.py
+<br>plistlib.py
+<br>poplib.py
+<br>pstats.py
+<br>pty.py
+<br>pyclbr.py
+<br>random.py
+<br>rlcompleter.py
+<br>runpy.py
+<br>sched.py
+<br>secrets.py
+<br>shelve.py
+<br>smtpd.py
+<br>smtplib.py
+<br>sndhdr.py
+<br>socketserver.py
+<br>ssl.py
+<br>statistics.py
+<br>sunau.py
+<br>symbol.py
+<br>symtable.py
+<br>tabnanny.py
+<br>telnetlib.py
+<br>trace.py
+<br>tracemalloc.py
+<br>tty.py
+<br>wave.py
+<br>xdrlib.py
+<br>zipapp.py
+<br>_bootlocale.py
+<br>_compression.py
+<br>_osx_support.py
+<br>_pyio.py
+<br>_sitebuiltins.py
+<br>_strptime.py
+<br>__phello__.foo.py</td>
+</tr>
+<tr><td valign="top">Lib\browser</td>
+<td style="vertical-align:top;"></td>
+<td style="vertical-align:top;">aio.py
+<br>ajax.py
+<br>highlight.py
+<br>html.py
+<br>indexed_db.py
+<br>local_storage.py
+<br>markdown.py
+<br>object_storage.py
+<br>session_storage.py
+<br>svg.py
+<br>template.py
+<br>timer.py
+<br>webcomponent.py
+<br>websocket.py
+<br>webworker.py
+<br>worker.py</td>
+<td style="vertical-align:top;"></td>
+</tr>
+<tr><td valign="top">Lib\browser\widgets</td>
+<td style="vertical-align:top;"></td>
+<td style="vertical-align:top;">__init__.py
+<br>dialog.py
+<br>menu.py</td>
+<td style="vertical-align:top;"></td>
+</tr>
+<tr><td valign="top">Lib\collections</td>
+<td style="vertical-align:top;">__init__.py
+<br>abc.py</td>
+<td style="vertical-align:top;"></td>
+<td style="vertical-align:top;"></td>
+</tr>
+<tr><td valign="top">Lib\concurrent</td>
+<td style="vertical-align:top;">__init__.py</td>
+<td style="vertical-align:top;"></td>
+<td style="vertical-align:top;"></td>
+</tr>
+<tr><td valign="top">Lib\concurrent\futures</td>
+<td style="vertical-align:top;">*_base.py
+<br>*__init__.py
+<br>*process.py
+<br>*thread.py</td>
+<td style="vertical-align:top;">_base.py
+<br>__init__.py
+<br>process.py
+<br>thread.py
+<br>webworker.py</td>
+<td style="vertical-align:top;"></td>
+</tr>
+<tr><td valign="top">Lib\email</td>
+<td style="vertical-align:top;">_encoded_words.py
+<br>*_header_value_parser.py
+<br>_parseaddr.py
+<br>_policybase.py
+<br>*__init__.py
+<br>architecture.rst
+<br>*base64mime.py
+<br>charset.py
+<br>contentmanager.py
+<br>encoders.py
+<br>errors.py
+<br>feedparser.py
+<br>generator.py
+<br>header.py
+<br>headerregistry.py
+<br>iterators.py
+<br>message.py
+<br>parser.py
+<br>policy.py
+<br>quoprimime.py
+<br>utils.py</td>
+<td style="vertical-align:top;">_header_value_parser.py
+<br>__init__.py
+<br>base64mime.py</td>
+<td style="vertical-align:top;"></td>
+</tr>
+<tr><td valign="top">Lib\email\mime</td>
+<td style="vertical-align:top;">__init__.py
+<br>application.py
+<br>audio.py
+<br>base.py
+<br>image.py
+<br>message.py
+<br>multipart.py
+<br>nonmultipart.py
+<br>text.py</td>
+<td style="vertical-align:top;"></td>
+<td style="vertical-align:top;"></td>
+</tr>
+<tr><td valign="top">Lib\encodings</td>
+<td style="vertical-align:top;">*__init__.py
+<br>*aliases.py
+<br>cp037.py
+<br>cp1006.py
+<br>cp1026.py
+<br>cp1125.py
+<br>cp1140.py
+<br>cp1250.py
+<br>cp1251.py
+<br>cp1252.py
+<br>cp1253.py
+<br>cp1254.py
+<br>cp1255.py
+<br>cp1256.py
+<br>cp1257.py
+<br>cp1258.py
+<br>cp273.py
+<br>cp424.py
+<br>cp437.py
+<br>cp500.py
+<br>cp720.py
+<br>cp737.py
+<br>cp775.py
+<br>cp850.py
+<br>cp852.py
+<br>cp855.py
+<br>cp856.py
+<br>cp857.py
+<br>cp858.py
+<br>cp860.py
+<br>cp861.py
+<br>cp862.py
+<br>cp863.py
+<br>cp864.py
+<br>cp865.py
+<br>cp866.py
+<br>cp869.py
+<br>cp874.py
+<br>cp875.py
+<br>*hp_roman8.py
+<br>idna.py
+<br>iso8859_1.py
+<br>iso8859_10.py
+<br>iso8859_11.py
+<br>iso8859_13.py
+<br>iso8859_14.py
+<br>iso8859_15.py
+<br>iso8859_16.py
+<br>iso8859_2.py
+<br>iso8859_3.py
+<br>iso8859_4.py
+<br>iso8859_5.py
+<br>iso8859_6.py
+<br>iso8859_7.py
+<br>iso8859_8.py
+<br>iso8859_9.py
+<br>koi8_r.py
+<br>koi8_u.py
+<br>mac_arabic.py
+<br>mac_centeuro.py
+<br>mac_croatian.py
+<br>mac_cyrillic.py
+<br>mac_farsi.py
+<br>mac_greek.py
+<br>mac_iceland.py
+<br>mac_latin2.py
+<br>mac_roman.py
+<br>mac_romanian.py
+<br>mac_turkish.py
+<br>palmos.py
+<br>ptcp154.py
+<br>punycode.py
+<br>tis_620.py
+<br>utf_8.py</td>
+<td style="vertical-align:top;">__init__.py
+<br>aliases.py
+<br>hp_roman8.py</td>
+<td style="vertical-align:top;">ascii.py
+<br>base64_codec.py
+<br>big5.py
+<br>big5hkscs.py
+<br>bz2_codec.py
+<br>charmap.py
+<br>cp932.py
+<br>cp949.py
+<br>cp950.py
+<br>euc_jisx0213.py
+<br>euc_jis_2004.py
+<br>euc_jp.py
+<br>euc_kr.py
+<br>gb18030.py
+<br>gb2312.py
+<br>gbk.py
+<br>hex_codec.py
+<br>hz.py
+<br>iso2022_jp.py
+<br>iso2022_jp_1.py
+<br>iso2022_jp_2.py
+<br>iso2022_jp_2004.py
+<br>iso2022_jp_3.py
+<br>iso2022_jp_ext.py
+<br>iso2022_kr.py
+<br>johab.py
+<br>koi8_t.py
+<br>kz1048.py
+<br>latin_1.py
+<br>mbcs.py
+<br>oem.py
+<br>quopri_codec.py
+<br>raw_unicode_escape.py
+<br>rot_13.py
+<br>shift_jis.py
+<br>shift_jisx0213.py
+<br>shift_jis_2004.py
+<br>undefined.py
+<br>unicode_escape.py
+<br>utf_16.py
+<br>utf_16_be.py
+<br>utf_16_le.py
+<br>utf_32.py
+<br>utf_32_be.py
+<br>utf_32_le.py
+<br>utf_7.py
+<br>utf_8_sig.py
+<br>uu_codec.py
+<br>zlib_codec.py</td>
+</tr>
+<tr><td valign="top">Lib\html</td>
+<td style="vertical-align:top;">*__init__.py
+<br>*entities.py
+<br>*parser.py</td>
+<td style="vertical-align:top;">__init__.py
+<br>entities.py
+<br>parser.py</td>
+<td style="vertical-align:top;"></td>
+</tr>
+<tr><td valign="top">Lib\http</td>
+<td style="vertical-align:top;">*__init__.py
+<br>client.py
+<br>*cookies.py</td>
+<td style="vertical-align:top;">__init__.py
+<br>cookies.py</td>
+<td style="vertical-align:top;">cookiejar.py
+<br>server.py</td>
+</tr>
+<tr><td valign="top">Lib\importlib</td>
+<td style="vertical-align:top;">*_bootstrap.py
+<br>*_bootstrap_external.py
+<br>__init__.py
+<br>abc.py
+<br>machinery.py
+<br>resources.py
+<br>util.py</td>
+<td style="vertical-align:top;">_bootstrap.py
+<br>_bootstrap_external.py
+<br>basehook.py</td>
+<td style="vertical-align:top;">metadata.py</td>
+</tr>
+<tr><td valign="top">Lib\json</td>
+<td style="vertical-align:top;">__init__.py
+<br>decoder.py
+<br>encoder.py
+<br>scanner.py
+<br>tool.py</td>
+<td style="vertical-align:top;"></td>
+<td style="vertical-align:top;"></td>
+</tr>
+<tr><td valign="top">Lib\logging</td>
+<td style="vertical-align:top;">*__init__.py
+<br>*config.py
+<br>*handlers.py</td>
+<td style="vertical-align:top;">__init__.py
+<br>brython_handlers.py
+<br>config.py
+<br>handlers.py</td>
+<td style="vertical-align:top;"></td>
+</tr>
+<tr><td valign="top">Lib\multiprocessing</td>
+<td style="vertical-align:top;">*__init__.py
+<br>*connection.py
+<br>*pool.py
+<br>*process.py
+<br>*util.py</td>
+<td style="vertical-align:top;">__init__.py
+<br>connection.py
+<br>pool.py
+<br>process.py
+<br>util.py</td>
+<td style="vertical-align:top;">context.py
+<br>forkserver.py
+<br>heap.py
+<br>managers.py
+<br>popen_fork.py
+<br>popen_forkserver.py
+<br>popen_spawn_posix.py
+<br>popen_spawn_win32.py
+<br>queues.py
+<br>reduction.py
+<br>resource_sharer.py
+<br>resource_tracker.py
+<br>sharedctypes.py
+<br>shared_memory.py
+<br>spawn.py
+<br>synchronize.py</td>
+</tr>
+<tr><td valign="top">Lib\multiprocessing\dummy</td>
+<td style="vertical-align:top;">*__init__.py
+<br>*connection.py</td>
+<td style="vertical-align:top;">__init__.py
+<br>connection.py</td>
+<td style="vertical-align:top;"></td>
+</tr>
+<tr><td valign="top">Lib\pydoc_data</td>
+<td style="vertical-align:top;">_pydoc.css
+<br>__init__.py
+<br>*topics.py</td>
+<td style="vertical-align:top;">topics.py</td>
+<td style="vertical-align:top;"></td>
+</tr>
+<tr><td valign="top">Lib\unittest</td>
+<td style="vertical-align:top;">__init__.py
+<br>__main__.py
+<br>*async_case.py
+<br>*case.py
+<br>loader.py
+<br>main.py
+<br>mock.py
+<br>*result.py
+<br>runner.py
+<br>signals.py
+<br>suite.py
+<br>util.py</td>
+<td style="vertical-align:top;">async_case.py
+<br>case.py
+<br>result.py</td>
+<td style="vertical-align:top;"></td>
+</tr>
+<tr><td valign="top">Lib\unittest\test</td>
+<td style="vertical-align:top;">_test_warnings.py
+<br>__init__.py
+<br>dummy.py
+<br>support.py
+<br>test_assertions.py
+<br>test_break.py
+<br>test_case.py
+<br>test_discovery.py
+<br>test_functiontestcase.py
+<br>test_loader.py
+<br>test_program.py
+<br>test_result.py
+<br>test_runner.py
+<br>test_setups.py
+<br>test_skipping.py
+<br>test_suite.py</td>
+<td style="vertical-align:top;"></td>
+<td style="vertical-align:top;">test_async_case.py
+<br>__main__.py</td>
+</tr>
+<tr><td valign="top">Lib\unittest\test\testmock</td>
+<td style="vertical-align:top;">__init__.py
+<br>support.py
+<br>testcallable.py
+<br>testhelpers.py
+<br>testmagicmethods.py
+<br>testmock.py
+<br>testpatch.py
+<br>testsentinel.py
+<br>testwith.py</td>
+<td style="vertical-align:top;"></td>
+<td style="vertical-align:top;">testasync.py
+<br>testsealable.py
+<br>__main__.py</td>
+</tr>
+<tr><td valign="top">Lib\urllib</td>
+<td style="vertical-align:top;">__init__.py
+<br>*error.py
+<br>*parse.py
+<br>*request.py</td>
+<td style="vertical-align:top;">error.py
+<br>parse.py
+<br>request.py</td>
+<td style="vertical-align:top;">response.py
+<br>robotparser.py</td>
+</tr>
+<tr><td valign="top">libs</td>
+<td style="vertical-align:top;"></td>
+<td style="vertical-align:top;">_aio.js
+<br>_ajax.js
+<br>_base64.js
+<br>_binascii.js
+<br>_io_classes.js
+<br>_jsre.js
+<br>_locale.js
+<br>_multiprocessing.js
+<br>_posixsubprocess.js
+<br>_profile.js
+<br>_sre_utils.js
+<br>_string.js
+<br>_strptime.js
+<br>_svg.js
+<br>_warnings.js
+<br>_webcomponent.js
+<br>_webworker.js
+<br>_zlib_utils.js
+<br>array.js
+<br>builtins.js
+<br>dis.js
+<br>hashlib.js
+<br>long_int.js
+<br>marshal.js
+<br>math.js
+<br>modulefinder.js
+<br>posix.js
+<br>random.js
+<br>unicodedata.js</td>
+<td style="vertical-align:top;">python3.lib
+<br>python38.lib
+<br>_tkinter.lib</td>
+</tr>
+<tr><td valign="top">libs\crypto_js\rollups</td>
+<td style="vertical-align:top;"></td>
+<td style="vertical-align:top;">aes.js
+<br>hmac-md5.js
+<br>hmac-ripemd160.js
+<br>hmac-sha1.js
+<br>hmac-sha224.js
+<br>hmac-sha256.js
+<br>hmac-sha3.js
+<br>hmac-sha384.js
+<br>hmac-sha512.js
+<br>md5.js
+<br>pbkdf2.js
+<br>rabbit-legacy.js
+<br>rabbit.js
+<br>rc4.js
+<br>ripemd160.js
+<br>sha1.js
+<br>sha224.js
+<br>sha256.js
+<br>sha3.js
+<br>sha384.js
+<br>sha512.js
+<br>tripledes.js</td>
+<td style="vertical-align:top;"></td>
+</tr>
+<tr><td valign="top">web_workers</td>
+<td style="vertical-align:top;"></td>
+<td style="vertical-align:top;">import.js
+<br>test_rpc.py
+<br>test_worker.py
+<br>worker.js</td>
+<td style="vertical-align:top;"></td>
+</tr>
+</tbody></table>
+<h2>CPython独有的目录(Brython中不含)</h2><li>DLLs
+</li><li>Doc
+</li><li>include
+</li><li>Lib\asyncio
+</li><li>Lib\ctypes
+</li><li>Lib\curses
+</li><li>Lib\dbm
+</li><li>Lib\distutils
+</li><li>Lib\ensurepip
+</li><li>Lib\idlelib
+</li><li>Lib\lib2to3
+</li><li>Lib\msilib
+</li><li>Lib\sqlite3
+</li><li>Lib\test\dtracedata
+</li><li>Lib\test\eintrdata
+</li><li>Lib\test\imghdrdata
+</li><li>Lib\test\libregrtest
+</li><li>Lib\test\test_asyncio
+</li><li>Lib\test\test_import
+</li><li>Lib\test\test_importlib\data
+</li><li>Lib\test\test_importlib\data01
+</li><li>Lib\test\test_importlib\data02
+</li><li>Lib\test\test_importlib\data03
+</li><li>Lib\test\test_importlib\namespace_pkgs
+</li><li>Lib\test\test_importlib\zipdata01
+</li><li>Lib\test\test_importlib\zipdata02
+</li><li>Lib\test\test_tools
+</li><li>Lib\test\test_warnings
+</li><li>Lib\test\xmltestdata\c14n-20
+</li><li>Lib\test\ziptestdata
+</li><li>Lib\tkinter
+</li><li>Lib\turtledemo
+</li><li>Lib\venv
+</li><li>Lib\wsgiref
+</li><li>Lib\xml
+</li><li>Lib\xmlrpc
+</li><li>Scripts
+</li><li>share
+</li><li>tcl
+</li><li>Tools
+</li></div>
+
+
+</td>
+</tr>
+</tbody></table>
+</div>
+</body>
+</html>

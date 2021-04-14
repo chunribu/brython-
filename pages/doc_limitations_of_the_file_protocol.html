@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>“file”协议的局限性</title>
+</head>
+<body>
+<div>
+	<h3>“file”协议的局限性</h3>
+	有两种不同方式将存储在计算机中的HTML文件加载到浏览器中：<br><br>
+	1)通过文件/打开浏览器菜单：在这种情况下，浏览器使用“文件”协议（地址栏中的地址以file://开头）<br><br>
+	2)通过启动本地Web服务器（例如Python标准发行版提供的服务器：python -m http.server），然后在浏览器地址栏中输入文件地址（例如localhost:8000:app.html）。协议为“ http”（或“ https”）<br><br>
+	这些选项基本相同，但是“文件”协议具有一些限制：<br><br>
+	1)外部脚本无法使用此语法加载<xmp> <script type="text/python" src="test.py"></script></xmp>
+	2)无法导入与应用程序位于同一目录中的模块或软件包<br><br>
+	3)文件无法打开和使用open()<br><br>
+	原因是这些功能依赖于Ajax调用来获取模块/包的源代码或文件内容。协议为“file”时，浏览器不允许进行Ajax调用。<br><br>
+	使用此协议，始终可以导入标准库中的模块,只要页面中已加载文件brython_stdlib.js; 还可加载<a href="doc_brython_packages.html">Brython包</a>和由命令python -m brython --modules创建的brython_modules.js文件中捆绑的模块。
+</div>
+</body>
+</html>

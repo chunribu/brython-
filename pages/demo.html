@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Brython中文网-示例</title>
+	<link rel="icon" type="image/png" href="/favicon.png">
+	<meta name="description" content="Brython中文网-示例: 创建新元素、
+				访问和修改现有元素、创建图形、动画、发送Ajax请求等.">
+	<link href="/theme/metro-all.min.css" rel="stylesheet">
+	<link href="/theme/prism.css" rel="stylesheet">
+	<!-- <script type="text/javascript" src="../brython.js"></script> -->
+	<!-- <script type="text/javascript" src="../brython_stdlib.js"></script> -->
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.8.9/brython.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.8.9/brython_stdlib.js"></script>
+	<script type="text/javascript" src="/demos.js"></script>
+	<style>
+		.active {
+			border-color: #00aff0!important;
+		}
+		.zone {
+			border: lightgray solid;
+		}
+	</style>
+	<!-- <script data-ad-client="ca-pub-2246970680812181" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
+</head>
+<body onload="brython()">
+	<!--banner-->
+	<script type="text/python">
+		from browser import document, html, ajax
+
+		menuList = [{'title': '教程', 'link': 'tutorial.html'},
+			{'title': '示例', 'link': 'demo.html'},
+			{'title': '文档', 'link': 'documentation.html'},
+			{'title': '控制台', 'link': 'console.html'},
+			{'title': '下载', 'link': 'https://github.com/brython-dev/brython/releases'}]
+		menu = document['menu']
+		for i in menuList:
+			_a = html.A(i['title'], href=i['link'])
+			_li = html.LI()
+			_li <= _a
+			menu <= _li
+	</script>
+	<div id="banner" data-role='appbar' data-expand-point='md' class="">
+		<a href="../index.html" class="brand no-hover">
+			<h3 class="fg-blue"> Brython </h3>
+			<span class="badge inline bg-blue fg-white">中文网</span>
+		</a>
+		<ul id="menu" class="app-bar-menu"></ul>
+	</div> 
+	
+	<div style="padding-top:52px;display:table; width:100%;">
+		<div style="display: table-row">
+			<div class="v-menu shadow-2" style="display: table-cell;height:calc(100vh - 52px)!important; 
+			width:17%; min-width:160px; vertical-align: top;">
+				<ul id="side-menu" style="margin:0 3px;">
+					<li class="menu-title">General</li>                  
+				</ul>
+			</div>
+			<div class="" style="display: block;padding:20px;">
+				<div id="demo-content">
+					<div id="init-area" class="text-light"><br>本页显示了一些示例，说明如何使用Python作为脚本语言与web页面交互：创建新元素、
+				访问和修改现有元素、创建图形、动画、发送Ajax请求等。脚本操作的对象, 即DOM, 由W3C定义。<br><br>
+				尽管DOM本质上是独立于语言的，但是MDN文档中的大多数示例都是用Javascript编写的，而不是用Python编写的。
+				转换通常很简单，因为Brython支持所有DOM类型及其属性和方法。在某些情况下，Brython添加了更符合python编程习惯的语法：
+				您可以通过浏览示例来发现它们。更多的文档和示例可以在Brython站点上找到。</div>
+				
+					<div id="弹出消息框" style="display: none;"><button id="button_alert">弹出消息框</button></div>
+					<div id="弹出消息窗口" style="display: none;"><button id="button_dialog">弹出消息窗口</button></div>
+					<div id="改变元素内文字" style="display: none;"><button id="button1">改变元素内文字</button>
+																	<span id="zone1" class="zone">Initial content</span></div>
+					<div id="改变元素样式（style）" style="display: none;"><button id="button2">change the style of an element</button>
+	<span id="zone2" style="color:blue;background-color:#aad;" class="zone">coloured content</span></div>
+					<div id="改变元素样式（class）" style="display: none;"><button id="button_class">change the class of an element</button>
+	<span id="zone_class" style="color:blue;background-color:#aad;" class="zone down">a random text</span></div>
+					<div id="元素的显示和隐藏" style="display: none;"><button id="button3">hide or show an element</button>
+	<span id="zone3" class="zone">on / off</span></div>
+					<div id="插入元素（原生风格）" style="display: none;"><button id="button6_std">insert an element (standard DOM methods)</button>
+	<span id="zone6_std" class="zone">initial content</span></div>
+					<div id="插入元素（brython风格）" style="display: none;"><button id="button6">insert an element (Brython style)</button>
+	<span id="zone6" class="zone">initial content</span></div>
+					<div id="元素前插入" style="display: none;"><button id="button61">insert before an element</button>
+	<div id="zone61" class="zone"><ul><li>element</li></ul></div></div>
+					<div id="元素后插入" style="display: none;"><button id="button62">insert after an element</button>
+	<div id="zone62" class="zone"><ul><li>element</li></ul></div></div>
+					<div id="插入元素带属性" style="display: none;"><button id="button_elt_attr">insert an element with attributes</button>
+	<span id="zone_elt_attr" class="zone">initial content</span></div>
+					<div id="插入HTML表格" style="display: none;"><button id="button7">insert an HTML table</button>
+	<p>
+	</p><div id="zone7" class="zone" style="width:60%"></div></div>
+					<div id="插入下拉菜单" style="display: none;"><button id="button12">insert a dropdown menu</button>
+	<span id="zone12" class="zone"></span></div>
+					<div id="canvas画图" style="display: none;"><button id="button8">draw in a canvas</button>
+	<canvas id="zone8" width="200" height="50" style="border-color:#000;border-style:solid;border-width:1px;margin-left:5em;"></canvas></div>
+					<div id="插入图片" style="display: none;"><button id="button9">insert an image</button>
+	<p></p><div id="zone9" class="zone" style="height:60px;"></div></div>
+					<div id="获取表单结果" style="display: none;"><button id="button16">get the value of form fields</button>
+	<p></p><div id="zone16" class="zone"></div>
+	<p></p><div style="width:30%; padding-left:3em; background-color:#ddd;">
+	  <p><input id="input16" autocomplete="off" value="test" spellcheck="false" data-ms-editor="true">
+	  <br><select id="select16" autocomplete="off">
+		  <option value="one">one
+		  </option><option value="two">two
+		  </option><option value="three">three
+	  </option></select>
+	  <br>
+	  <textarea id="textarea16" rows="3" cols="30" autocomplete="off" spellcheck="false" data-ms-editor="true">your content here !...</textarea>
+	</p></div></div>
+					<div id="使用CSS选择器" style="display: none;"><button id="button13">select elements by CSS selectors</button>
+	<span id="zone13" class="zone"></span></div>
+					<div id="旋转元素" style="display: none;"><button id="button14">rotate an element</button>
+	<span id="zone14" class="zone">
+		<button style="background-color: red; width: 1.5em;" id="rot14">&nbsp;</button>
+	</span></div>
+					<div id="添加动画" style="display: none;"><button id="button15">animate an element</button>
+	<p>
+	</p><div id="zone15" style="padding:0;" class="zone">
+		<button style="background-color: #fff; border-width: 0px; color:#000;padding:0;font-size:24px;height:auto;" id="rot15">►</button>
+	</div></div>
+					<div id="拖拽移动" style="display: none;"><button id="button_mousemove" style="border-width:0;background-color:inherit;">
+		move an element with the mouse
+	</button>
+	<b id="moving" style="top: 10px; left: 140px; cursor: move;">drag me
+	</b></div>
+					<div id="使用local storage" style="display: none;"><button id="button_ls">use local storage</button>
+	<p></p><div id="zone_ls" style="padding-left:1em;"></div></div>
+					<div id="发送Ajax请求" style="display: none;"><button id="button10">send an Ajax request</button>
+	<p></p><div id="zone10" class="zone" style="padding-left:1em;"></div></div>
+					<div id="操作本地文件" style="display: none;"><button id="button50">select, read and save a local file</button>
+	<br><input type="file" id="rtfile1">
+	<a id="save_file" href="#" download="" class="anchor-as-button">save</a>
+	<br><textarea id="rt1" rows="20" cols="60" autocomplete="off" spellcheck="false" data-ms-editor="true"></textarea></div>
+					<div id="在console中使用brython" style="display: none;"><button id="button5">write in the browser console</button></div>
+					<div id="解析XML" style="display: none;"><button id="button18">parse an XML document</button>
+	<p></p><div id="zone18" class="zone" style="padding-left:1em;width:auto;"></div></div>
+					<div id="调用JS对象（Date）" style="display: none;"><button id="button11">use javascript objects : Date</button>
+	<span id="zone11" class="zone"></span></div>
+					<div id="调用JS对象（RegExp, String）" style="display: none;"><button id="button17">use javascript objects : RegExp, String</button>
+	<span id="zone17" class="zone"></span></div>
+				</div>
+				<script type="text/javascript">
+					demos.forEach((item)=>{
+						const ele = document.getElementById(item.id)
+						
+						const my_pre = document.createElement('pre')
+						const my_code = document.createElement('code')
+						my_code.textContent = item.code
+						my_code.classList.add('language-python')
+						my_pre.appendChild(my_code)
+						ele.appendChild(my_pre)
+						
+						const my_info = document.createElement('p')
+						my_info.innerHTML = item.info
+						my_info.classList.add('reduce-1')
+						ele.appendChild(my_info)
+
+						const my_script = document.createElement('script')
+						my_script.type = 'text/python'
+						my_script.src = './code/'+item.id+'.py'
+						ele.appendChild(my_script)
+
+					})
+				</script>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		let side_menu = document.getElementById('side-menu')
+		let demo_content = document.getElementById('demo-content')
+		side_menu.innerHTML = ''
+		demos.forEach( (i)=>{
+			let li = document.createElement('li')
+			let node=document.createTextNode(i.id)
+			li.appendChild(node)
+			li.addEventListener('click', changeDemo)
+			side_menu.appendChild(li)
+		} )
+		function changeDemo(event){
+			// change class
+			for (let item of side_menu.children){
+				item.classList.remove('active')
+			}
+			let li = event.target
+			li.classList.add('active')
+			
+			// chenge display area
+			let id = li.textContent
+			let init_area = document.getElementById('init-area')
+			init_area.innerHTML = ''
+			
+			demos.forEach(item=>{
+				let tmp = document.getElementById(item.id)
+				tmp.style.display = item.id==id ? 'block' : 'none'
+			})
+		}
+	</script>
+
+	<script type="text/javascript" src="/theme/metro.min.js"></script>
+	<script type="text/javascript" src="/theme/prism.js"></script>
+	
+</body>
+</html>

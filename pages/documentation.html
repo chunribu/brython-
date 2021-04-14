@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Brython中文网-文档</title>
+	<meta charset="UTF-8">
+	<link rel="icon" type="image/png" href="/favicon.png">
+	<meta name="description" content="Brython中文网-官方文档中文版">
+	<!-- <script type="text/javascript" src="/brython.js"></script> -->
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.8.9/brython.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.8.9/brython_stdlib.js"></script>
+	<link rel="stylesheet" href="/theme/metro-all.min.css">
+	<style type="text/css">
+		xmp {
+			background-color: #f5f2f0;
+		}
+		table table tr {
+			border:gray solid 1px;
+		}
+		#doc-content h3{
+			padding-top: 22px;
+		}
+	</style>
+	<!-- <script data-ad-client="ca-pub-2246970680812181" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
+</head>
+<body onload="brython()">
+	<!--banner-->
+	<script type="text/python">
+		from browser import document, html
+
+		menuList = [{'title': '教程', 'link': 'tutorial.html'},
+			{'title': '示例', 'link': 'demo.html'},
+			{'title': '文档', 'link': 'documentation.html'},
+			{'title': '控制台', 'link': 'console.html'},
+			{'title': '下载', 'link': 'https://github.com/brython-dev/brython/releases'}]
+		menu = document['menu']
+		for i in menuList:
+			_a = html.A(i['title'], href=i['link'])
+			_li = html.LI()
+			_li <= _a
+			menu <= _li
+	</script>
+	<div id="banner" data-role='appbar' data-expand-point='md' class="">
+		<a href="../index.html" class="brand no-hover">
+			<h3 class="fg-blue"> Brython </h3>
+			<span class="badge inline bg-blue fg-white">中文网</span>
+		</a>
+		<ul id="menu" class="app-bar-menu"></ul>
+	</div> 
+
+	<div style="padding-top:52px;display:table; width:100%;">
+		<div style="display: table-row">
+			<div class="v-menu shadow-2" style="display: table-cell;height:calc(100vh - 52px)!important; 
+			width:17%; min-width:160px; vertical-align: top;">
+				<ul id="side-menu" style="margin:0 3px;">
+					<li ><a href="https://brython.info/static_doc/en/intro.html" target="_blank" class="reduce-3">文档持续更新, 英文版 brython.info</a></li>
+				</ul>
+			</div>
+
+			<div class="" style="display: block;padding:20px;">
+				<div id="doc-content">
+					<div class="row flex-align-center flex-justify-center body-header">
+                		<div class="display4 fg-blue">
+                    		<span class="reduce-3 enlarge-3-md text-bold">Brython</span><span style="font-size: 14px; color: black; ">中文文档</span>
+                		</div>
+            		</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/python">
+		from browser import document, html, ajax
+
+		content = document['doc-content']
+		def changeDoc(req):
+			content.html = req.text
+
+		def getContent(event):
+			link = event.target.link
+			req = ajax.ajax()
+			req.open('GET', link, True)
+			req.bind('complete', changeDoc)
+			content.text = ''
+			req.send()
+
+		myList = [{'title': '介绍', 'link': 'doc_introduction.html'},
+			{'title': '安装', 'link': 'doc_installation.html'},
+			{'title': 'file协议的局限性', 'link': 'doc_limitations_of_the_file_protocol.html'},
+			{'title': '语法,关键字和内置函数', 'link': 'doc_syntax_keywords_built_in_functions.html'},
+			{'title': '标准分布', 'link': 'doc_standard_distribution.html'},
+			{'title': 'import的实现', 'link':'doc_import.html'},
+			{'title': 'Brython包', 'link':'doc_brython_packages.html'},
+			{'title': 'browser模块', 'link':'doc_browser.html'},
+			{'title': 'browser.aio', 'link':'doc_browser_aio.html'},
+			{'title': '', 'link':''},
+			{'title': '', 'link':''},
+			{'title': '', 'link':''},
+			{'title': '', 'link':''},
+			{'title': '', 'link':''},
+			{'title': '', 'link':''},
+			{'title': '', 'link':''},
+			{'title': '', 'link':''},
+			{'title': '', 'link':''},
+			{'title':'...', 'link':'about:blank'}]
+		side = document['side-menu']
+		for i in myList:
+			_li = html.LI(i['title'])
+			_li.link = i['link']
+			_li.bind('click', getContent)
+			side <= _li
+	</script>
+	<script type="text/javascript" src="/theme/metro.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<div>
+	<h3>模块browser.aio</h3>
+	该模块使用关键字async和await支持Brython中的异步编程。<br>
+	它替换了CPython标准库中的asyncio模块，该模块无法在浏览器上下文中运行：<br>
+	1) 它使用了诸如run()或run_until_complete()之类的阻塞函数，并且浏览器的工作方式使其无法定义在事件发生之前暂停执行的函数。<br>
+	2) 浏览器具有其自己的隐式事件循环，因此无法像asyncio模块使用set_event_loop()函数那样定义另一个事件循环。<br>
+	模块browser.aio定义了以下异步功能：
+	<h3>Ajax请求</h3>
+	<h5>ajax(method, url[, format="text", headers=None, data=None, cache=False])</h5>
+	req = await ajax("GET", url)在异步函数内部将控制权交还给主程序，并在完成对指定URL的类型方法（“ GET”，“ POST”，“ PUT”等）的Ajax请求后恢复该函数。返回值是Request类的实例（请参见下文）。<br>
+	format是预期的响应格式。它可以是以下之一：<br>“ text”：响应是一个字符串<br>“ binary”：类字节的实例<br>“ dataURL”：格式化为dataURL的字符串<br>headers是一个字典，带有与请求一起发送的HTTP标头。
+	<br>data是将与请求一起发送的字符串或字典，以形成“ GET”请求的查询字符串或“ POST”的请求正文。<br>
+	cache是一个布尔值，指示是否应使用浏览器缓存
+	<h5>get(url[, format="text", headers=None, data=None, cache=False])</h5>
+	ajax("GET", url...)的快捷方式
+	<h5>post(url[, format="text", headers=None, data=None])</h5>
+	ajax("POST", url...)的快捷方式
+	<h5>请求实例</h5>
+	由await ajax（），await get（）或await post（）返回的Request类的实例具有以下属性：<br>
+	data：响应主体，格式由参数format定义<br>
+	response_headers：匹配响应头的字典<br>
+	status：HTTP响应状态为整数（200，404 ...）<br>
+	statusText：HTTP响应状态，以字符串形式显示（“ 200 Ok”，“找不到404文件” ...）
+	<h3>其他异步功能</h3>
+	<h5>event(element, name)</h5>
+	evt = await aio.event(element, "click") 暂停执行异步功能，直到用户单击指定的元素。返回值是DOMEvent类的实例
+	<h5>sleep(seconds)</h5>
+	在异步函数中，wait sleep（n）将控制权交还给主程序，并在n秒后恢复函数执行。
+	<h3>运行一个异步函数</h3>
+	<h5>run(coroutine)</h5>
+	运行协程，即调用由async def定义的异步函数的结果。这是一个非阻塞函数：它不会等到异步函数完成才能执行以下行中的指令。下一条指令运行的时间是不可预测的。
+	<h3>例子</h3>
+	在INPUT元素中输入文本（定制的input（）函数）
+	<xmp>from browser import alert, document, html, aio
+
+async def main():
+    input = html.INPUT()
+    document <= input
+    while True:
+        ev = await aio.event(input, "blur")
+        try:
+            v = int(ev.target.value)
+            input.remove()
+            alert(f"Value: {v}")
+            break
+        except ValueError:
+            input.value = ""
+
+aio.run(main())</xmp>
+异步读取文件:
+<xmp>from browser import document, html, aio
+
+async def main():
+    # Text file
+    req = await aio.ajax("GET", "test.html")
+    print(len(req.data))
+    # Binary file
+    req = await aio.get("memo.pdf", format="binary")
+    print(len(req.data))
+    # Read binary file as dataURL
+    req = await aio.get("eraser.png", format="dataURL")
+    # display the image in an IMG tag
+    document <= html.IMG(src=req.data)
+
+aio.run(main())</xmp>
+<br>
+</div>

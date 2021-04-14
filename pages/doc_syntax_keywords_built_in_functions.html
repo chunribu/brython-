@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>语法, 关键字和内置函数</title>
+</head>
+<body>
+<div>
+	Brython基于<a href="https://docs.python.org/3/reference/index.html">Python语言参考</a>实现了Python3, 由于浏览器本身的限制，尤其是与文件系统有关的限制。写入文件是不可能的，而读取仅限于可通过Ajax请求访问的文件夹。
+	<h3>关键字和内置函数</h3>
+	Brython支持Python 3的所有关键字和函数：<br><br>
+	<b>关键字</b>: and, as, assert, async, await, break, class, continue, def, del, elif, else, except, False, finally, for, from, global, if, import, in, is, lambda, None, nonlocal, not, or, pass, raise, return, True, try, while, with, yield<br><br>
+	<b>内置函数和类</b>: abs, all, any, ascii, bin, bool, breakpoint, bytes, callable, chr, classmethod, delattr, dict, dir, divmod, enumerate, eval, exec, filter, float, frozenset, getattr, globals, hasattr, hash, hex, id, input, int, isinstance, iter, len, list, locals, map, max, memoryview, min, next, object, open, ord, pow, print, property, range, repr, reversed, round, set, setattr, slice, sorted, str, sum, super, tuple, type, vars, zip, __import__<br><br>
+	以下是浏览器和Javascript带来的一些特点和限制：<br><br>
+	1)在转到下一条指令之前，JavaScript函数无法在给定的时间内阻止执行或等待事件发生。因此, 不能使用time.sleep(),必须使用模块browser.timer中的函数，例如set_timeout()或set_interval(); 内置函数input()由Javascript函数prompt()模拟。<br><br>
+	2)出于相同的原因，并且由于浏览器具有其自己的隐式事件循环，因此CPython asyncio模块不可用。提供了特定于Brython的模块<a href="doc_browser_aio.html">browser.aio</a>进行异步编程。<br><br>
+	3)内置函数open()将要打开的文件的url作为参数。由于它是通过Ajax调用读取的，因此它必须与脚本位于同一域中。open()返回的对象具有通常的读取和访问方法： read, readlines, seek, tell, close。仅支持文本模式：Ajax调用处于阻塞状态，在这种模式下，不能设置responseType属性<br><br>
+	4)默认情况下，print()将输出到Web浏览器控制台，错误消息也将输出。可以使用write()方法将sys.stderr和sys.stdout分配给对象，例如，这允许将输出重定向到窗口或文本区域。<br><br>
+	5)要打开一个打印对话框（到打印机），请调用window.print（在模块browser中定义了窗口）。<br><br>
+	6)对象生命周期由Javascript垃圾收集器管理，Brython不像CPython那样管理引用计数。因此，当不再引用类实例时，不会调用方法__del __()。
+	<h3>标准库</h3>
+	Brython附带了CPython标准库的一部分。<br>CPython标准库中用C编写的一些模块已经用Brython发行版中的Javascript编写（math，unicodedata ...）。对于其他版本（例如，re模块或json包），提供了纯Python版本（不是那么快！）。<br>未提供xml包，因为CPython发行版使用的C模块（pyexpat）在Javascript和纯Python中均不可用。<br><br>
+	<h3>内置值__name__</h3>
+	内置变量__name__设置为脚本的属性ID的值。例如：
+	<xmp><script type="text/python" id="myscript">
+assert __name__ == 'myscript'
+</script></xmp>
+	如果2个脚本具有相同的ID，则会引发异常。<br><br>
+	对于未设置明确ID的脚本：<br><br>
+	如果没有脚本的ID设置为__main__，则第一个“未命名”脚本的__name__设置为“ __main__”。因此，如果页面中只有一个脚本，它将能够运行通常的测试：
+	<xmp><script type="text/python">
+if __name__=='__main__':
+    print('hello !')
+</script></xmp>
+	对于其他未命名的脚本，__name__设置为以__main__开头的随机字符串
+</div>
+</body>
+</html>

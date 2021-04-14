@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>introduction</title>
+</head>
+<body>
+	<div>
+	引用<a target="_blank" href="http://www.w3.org/DOM/">W3C文档对象模型规范：</a><br><br>
+	<i>什么是文档对象模型(DOM)？</i><br><br>
+	<i>W3C 文档对象模型(DOM)是中立于平台和语言的接口，它允许程序和脚本动态地访问和更新文档的内容、结构和样式。</i><br><br>
+	Brython的目标是用Python替代Javascript，将其作为Web浏览器的脚本语言。<br><br>
+	下面是一个简单的例子:
+	<xmp>
+<html>
+<head>
+<script src="/brython.js"></script>
+</head>
+<body onload="brython()">
+<script type="text/python">
+from browser import document
+from browser.widgets.dialog import InfoDialog
+
+def click(ev):
+    InfoDialog("Hello", f"Hello, {document['zone'].value} !")
+
+# bind event 'click' on button to function echo
+document["echo"].bind("click", click)
+</script>
+<input id="zone">
+<button id="mybutton">click !</button>
+</body>
+</html>
+	</xmp>
+	为了处理Python脚本，有必要包括brython.js并在页面加载时运行brython（）函数（使用<BODY>标签的onload属性）。在开发阶段，可以将参数传递给brython（）函数：1将错误消息显示到Web浏览器控制台，2同时获取与错误一起显示的Javascript代码。<br><br>
+	如果Python程序很大，另一种选择是将其写入一个单独的文件中，并使用script标签的src属性进行加载：
+	<xmp>
+<html>
+
+<head>
+<script src="/brython.js"></script>
+</head>
+
+<body onload="brython()">
+<script type="text/python" src="test.py"></script>
+<input id="zone" autocomplete="off">
+<button id="mybutton">click!</button>
+</body>
+
+</html>
+	</xmp>
+	请注意，在这种情况下，Python脚本将通过Ajax调用加载：它必须与HTML页面位于同一域中。<br><br>
+	脚本扩展名通常是.py。在某些情况下，服务器会将对此扩展名的Ajax调用解释为在服务器中执行脚本的请求。在这种情况下，您必须更改扩展名，例如，如以下示例所示，将其替换为.bry：<br>
+	<xmp><script type="text/python" src="test.bry"></script></xmp>
+	在上面的两个代码示例中，当我们单击按钮时，onclick事件将调用并运行在Python脚本中定义的echo（）函数。此函数通过其id（区域）获取INPUT元素的值。这是通过语法document [“ zone”]来完成的：在模块浏览器中定义的document是一个对象，表示当前显示在浏览器中的文档。它的行为就像字典，其键是DOM元素的ID。因此，在我们的示例中，document [“ zone”]是一个映射到INPUT元素的对象；有趣的是，value属性保存对象的值。<br><br>
+	在Brython中，可以通过多种方式完成输出，包括使用alert（）函数（也在浏览器中定义），该函数显示一个弹出窗口，并带有作为参数传递的文本。
+	</div>
+</body>
+</html>

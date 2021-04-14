@@ -1,0 +1,26 @@
+<div>
+	browser是Brython特有的内置模块
+	<h5>browser.alert(message)</h5>
+	在弹出窗口中打印消息。返回None
+	<h5>browser.bind(target, event)</h5>
+	作为装饰器, 用做事件绑定。
+	<h5>browser.confirm(message)</h5>
+	在一个窗口中打印消息，并显示两个按钮（确定/取消）。如果确定，则返回True；如果取消，则返回False。
+	<h5>browser.console</h5>
+	具有与浏览器控制台进行交互的方法的对象。其界面是特定于浏览器的。例如其方法log(msg)可在控制台中显示消息msg
+	<h5>browser.document</h5>
+	代表当前显示在浏览器窗口中的HTML文档的对象。
+	<h5>browser.DOMEvent</h5>
+	DOM事件的类.
+	<h5>browser.DOMNode</h5>
+	DOM节点的类.
+	<h5>browser.load(script_url)</h5>
+	在地址script_url加载Javascript库。
+	该函数使用阻塞的Ajax调用。如果无法通过script标签在html页面中加载Javascript库，则必须使用它。
+	<h5>browser.prompt(message[,default])</h5>
+	在窗口和输入字段中显示消息。返回输入的值;如果未输入任何值，则返回默认值（如果已定义），否则返回空字符串
+	<h5>browser.run_script(src[, name])</h5>
+	此函数在src中执行Python源代码。它可以用作exec()的替代方法, 名称非必需，其优点是使用了indexedDB缓存从标准库中导入模块。
+	<h5>browser.window</h5>
+	代表浏览器窗口的对象
+</div>

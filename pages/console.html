@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Brython中文网-控制台</title>
+	<meta charset="UTF-8">
+	<link rel="icon" type="image/png" href="/favicon.png">
+	<meta name="description" content="Brython中文网-控制台:在线使用brython,轻松嵌入网页.">
+	<!-- <script type="text/javascript" src="/brython.js"></script> -->
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.8.9/brython.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.8.9/brython_stdlib.js"></script>
+	<link rel="stylesheet" href="/theme/metro-all.min.css">
+	<style>
+		.codearea {
+        background-color:#1f1f1f;
+        color:#fff;
+        font-family:'Oxygen Mono', Consolas, 'Liberation Mono', 'DejaVu Sans Mono', monospace;
+        font-size:14px;
+        overflow:auto;
+        margin-top: 52px;
+    }
+	</style>
+</head>
+<body onload="brython()">
+	<!--banner-->
+	<script type="text/python">
+		from browser import document, html
+
+		menuList = [{'title': '教程', 'link': 'tutorial.html'},
+			{'title': '示例', 'link': 'demo.html'},
+			{'title': '文档', 'link': 'documentation.html'},
+			{'title': '控制台', 'link': 'console.html'},
+			{'title': '下载', 'link': 'https://github.com/brython-dev/brython/releases'}]
+		menu = document['menu']
+		for i in menuList:
+			_a = html.A(i['title'], href=i['link'])
+			_li = html.LI()
+			_li <= _a
+			menu <= _li
+	</script>
+	<div id="banner" data-role='appbar' data-expand-point='md' class="">
+		<a href="../index.html" class="brand no-hover">
+			<h3 class="fg-blue"> Brython </h3>
+			<span class="badge inline bg-blue fg-white">中文网</span>
+		</a>
+		<ul id="menu" class="app-bar-menu"></ul>
+	</div> 
+	<textarea id="code" rows="20" cols="80" class="codearea"></textarea>
+	<script type="text/python3">
+		from interpreter import Interpreter
+
+		# Start an interactive interpreter in textarea with id "code"
+		Interpreter("code")
+	</script>
+	<div>
+		嵌入:
+		<blockquote title="The Console can be embedded in a web page by adding this line">
+			<pre>&lt;iframe src="http://brython.cn/pages/console.html" width="800" height="400"&gt;&lt;/iframe&gt;</pre>
+		</blockquote>
+	</div>
+	<script type="text/javascript" src="/theme/metro.min.js"></script>
+</body>
+</html>

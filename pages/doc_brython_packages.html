@@ -1,0 +1,19 @@
+<div>
+	<h3>Brython包</h3>
+	<i>版本要求3.7.5+</i>
+	可以在HTML页面中加载“ Brython包”以访问可导入模块。它包含一个扩展名为.brython.js的文件，其中包含要分发的模块和包。用通常的语法插入
+	<xmp><script src="http://anyhost/path/package_name.brython.js"></script></xmp>
+	Brython包可以位于任何服务器上，从而使其部署和使用非常简单。要生成Brython包，请使用CPython brython包。在要分发的模块和包所在的目录中，运行：
+	<xmp>python -m brython --make_package <package_name></xmp>
+	如果目录包含文件__init.py__，则模块将相对于软件包。例如，如果目录结构是
+	<pre>__init__.py
+dialog.py
+menu.py</pre>
+	我们想从该目录生成包组件，然后模块将通过
+	<xmp>import widgets.dialog
+from widgets import menu</xmp>
+	如果目录不包含__init__.py，则模块将通过其名称导入。所以如果它只包含
+	<pre>import dialog
+import menu</pre>
+
+</div>

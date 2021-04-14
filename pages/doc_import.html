@@ -1,0 +1,47 @@
+<div>
+	<h3>import的实现</h3>
+	像在标准Python中一样，您可以在应用程序中安装模块或包, 只需通过将模块放置在根目录或带有__init__.py的目录中。<br>
+	请注意，模块必须以utf-8编码；脚本顶部的编码声明将被忽略。<br>
+	例如，应用程序可以由以下文件和目录组成：
+	<pre>.bundle-include
+app.html
+brython.js
+brython_modules.js
+brython_stdlib.js
+index.html
+users.py
+utils.py
++ app
+    __init__.py
+    records.py
+    tables.py
+	</pre>
+	app.html中的Python脚本可以运行导入:
+	<xmp>import users
+import app.records</xmp>
+	如果标准库已包含在页面中，
+	<xmp><script type="text/javascript" src="brython_stdlib.js"></script>
+</xmp>
+	该脚本也可以运行
+	<xmp>import datetime
+import re</xmp>
+	为了导入模块或包，Brython使用与CPython相同的机制：解析“ import X”，程序在多个位置查找文件：<br>
+	<ul>
+		<li>标准库中的模块X</li>
+		<li>根目录中的文件X.py</li>
+		<li>X目录中的__init__.py文件</li>
+	</ul>
+	由于浏览器无法直接访问文件系统，因此必须通过Ajax调用来查找文件，如果指定的url中没有文件，则该调用将返回错误消息。
+	<h3>优化</h3>
+	上述过程有两个主要缺点：
+	<ul>
+		<li>brython_stdlib.js相对较大的大小（超过3 Mb）</li>
+		<li>Ajax调用花费的时间</li>
+	</ul>
+	为了优化导入，如果pip安装了Brython，则可以生成文件brython_modules.js，该文件仅包含应用程序使用的模块。<br>
+	为此，打开一个控制台窗口，导航到应用程序目录并执行<xmp>python -m brython --modules</xmp>
+	请注意，此程序将解析目录及其子目录的所有脚本，模块和HTML页面中的Brython代码。使用的CPython版本必须与此Brython代码兼容：例如，如果Brython代码中包含f字符串，则需要CPython 3.6+，否则会出现语法错误。
+	<br>然后，您可以替换所有出现的<xmp><script type="text/javascript" src="brython_stdlib.js"></script>
+</xmp>
+	为:<xmp><script type =“ text / javascript” src =“ brython_modules.js”> </ script></xmp>
+</div>

@@ -1,0 +1,208 @@
+<article itemscope="itemscope" itemtype="http://schema.org/Article" class="article" data-v-06722024="" data-v-6a3e47cf=""><h1 class="article-title" data-v-06722024="">Brython 工作原理 - 中文</h1> <div itemprop="articleBody" class="article-content" data-v-06722024=""><div><p><a target="_blank" href="https://github.com/brython-dev/brython" rel="nofollow noopener noreferrer">Brython</a> 目的是可以用 Python 代替 Javascript 同样支持前端应用开发。</p>
+<p>典型的在 HTML 中使用 Brython 的例子</p>
+<pre><code class="hljs html copyable" lang="html"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"/path/to/brython.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span> <span class="hljs-attr">onload</span>=<span class="hljs-string">"brython()"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text/python"</span>&gt;</span><span class="undefined">
+...
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+<span class="copy-code-btn">复制代码</span></code></pre><p><code>brython.js</code> 是处理特定任务的各个脚本最小组合，这些任务可以是在编译时（将 Python 代码转换成 JS 代码）或运行时（Python 内置对象的实现，如：<code>py_list.js</code> 中的 <code>list</code> 和 <code>tuple</code>，<code>py_string.js</code> 中的 <code>str</code> 等），开发时都是独立的脚本，然后使用 <code>/scripts/make_dist.py</code> 脚本打包成 <code>brython.js</code>。</p>
+<p><code>brython.js</code> 暴露两个全局的参数： 一个是用来在页面加载时的回调方法 <code>brython</code> 和一个包含了运行 Python 脚本所需全部内置对象的 <code>__BRYTHON__</code> 。</p>
+<p><code>brython()</code> 会检查页面中所有的 <code>scripts</code>，如果 <code>script</code> 标签设置了 <code>type="text/python"</code>，那么它将被当做 Python 代码读取然后解析成 Javascript，并且最后通过 <code>eval()</code> 或者 <code>new Function(func_name, source)(module)</code> 的方式执行，第二种形式用来避免在某些浏览器上产生内存泄漏。</p>
+<p>如果 <code>script</code> 标签有 <code>src</code> 属性，就会通过 <code>Ajax</code> 请求的方式获取文件的内容，然后像上边那样解析和执行。</p>
+<p>Brython 将 Python 转换成 Javascript 的流程如下：</p>
+<p>tokenizer 读取源码中的 tokens，并主动将他们解析成抽象代码树或者提出语法错误 <code>SyntaxError</code> 或者缩进错误 <code>IndentationError</code>。</p>
+<ul>
+<li>将该语法书进行转换（添加或修改节点），将 Python 语句转换成 Javascript 语句。</li>
+<li>如果设置了调试等级，就会添加一些而外的节点到内置对象上用来设置脚本的名称和行号。</li>
+<li>被转换后的语法书支持一个 <code>to_js()</code> 的方法，会返回转换后的 Javascript 代码。</li>
+</ul>
+<p>所有这些操作在 <code>py2js.js</code> 中完成：</p>
+<ul>
+<li><code>brython()</code> 是脚本中最后一个方法。</li>
+<li><code>py2js()</code> 是负责完成代码转换的方法。</li>
+<li><code>py2js()</code> 方法调用了 tokenize() 生成的 tokenizer。</li>
+<li>tokenizer 构建的语法树是 <code>$Node</code> 类的实例。</li>
+<li>每个新语句都会穿检出一个 <code>$Node</code> 实例，并会为这个实例生成一个上下文 context。</li>
+<li>新的 tokens 通常可以使用下边的形式来改变 context 的状态<pre><code class="hljs javascript copyable" lang="javascript">context = transition(context, token_type, token_value)
+<span class="copy-code-btn">复制代码</span></code></pre></li>
+<li><code>context</code> 是脚本中一些类的实例，这些类都是以 <code>$</code> 开头并以 <code>Ctx</code> 结尾，举个例子：当 tokenizer 遇到关键词 <code>try</code> 时，<code>transition()</code> 方法会返回一个 <code>$TryCtx</code> 的实例。</li>
+</ul>
+<h2 data-id="heading-0">Brython 内置对象</h2>
+<p><code>__BRYTHON__</code> 有一个 <code>builtins</code> 的属性，该属性存储了所有的 Python 内置对象的名称（<code>classes</code>, <code>functions</code>, <code>execptions</code>, <code>objects</code>），与 Python 语法相对应，如 Python 中的 int 对应了 <code>__BRYTHON_.builtins.int</code>。只有与 Javascripts 命名规则冲突了的名称需要被更改，如 <code>super()</code> 被更改为 <code>__BRYTHON__.builtins.?super</code>。</p>
+<h3 data-id="heading-1">Python 对象的实现</h3>
+<p>Python 对象都会用原生的 Javascript 对象实现。</p>
+<ul>
+<li>
+<p>Python 字符串 <code>string</code> 用 Javascript 字符串 <code>string</code> 实现。</p>
+</li>
+<li>
+<p>Python 列表 <code>list</code> 和元组 <code>tuple</code> 用 Javascript 数组实现 <code>array</code> 实现。</p>
+</li>
+<li>
+<p>Python 整数 <code>integer</code> 如果在 Javascript 数字安全范围内 [-2^53-1, 2^53-1]会用 <code>number</code> 实现，超出范围会用一个 <code>internal</code> 类实现。</p>
+</li>
+<li>
+<p>Python 浮点数 <code>float</code> 会用 javascript 数字类 <code>Number</code> 实现。</p>
+</li>
+<li>
+<p>其他的 Python 类（包括内置和用户自定义的），都会作为 Javascript 对象实现，并保留该类的属性和方法。</p>
+<p>最小的类的实现代码如下：</p>
+<pre><code class="hljs javascript copyable" lang="javascript">$B.make_class = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">name, factory</span>) </span>{
+    <span class="hljs-comment">// Builds a basic class object</span>
+
+    <span class="hljs-keyword">var</span> A = {
+        <span class="hljs-attr">__class__</span>: _b_.type,
+        <span class="hljs-attr">__mro__</span>: [object],
+        <span class="hljs-attr">__name__</span>: name,
+        <span class="hljs-attr">$is_class</span>: <span class="hljs-literal">true</span>
+    }
+
+    A.$factory = factory
+
+    <span class="hljs-keyword">return</span> A
+}
+<span class="copy-code-btn">复制代码</span></code></pre><p><code>factory</code> 是创建类实例的方法，实例的 <code>__class__</code> 属性设置为 <code>class</code> 对象，这个类的 <code>__mro__</code> 属性用于在类实例上进行属性解析。</p>
+</li>
+</ul>
+<h3 data-id="heading-2">Python 函数 Functions 的实现</h3>
+<p>Python functions 同样作为 Javascript functions 实现，但是他们在函数的定义和调用上有很多的不同。</p>
+<p>定义一个 Python 函数，可以通过多种方式指定他的参数，如：</p>
+<pre><code class="hljs python copyable" lang="python"># 命名参数
+def f(x): 
+
+# 带默认值的参数
+def f(x=1):
+    
+# 可变参数
+def f(*x):
+    
+# 关键字参数
+def f(**x)
+<span class="copy-code-btn">复制代码</span></code></pre><p>Python 的函数调用也可以通过以上的几种方式调用：固定位置的参数 <code>f(2)</code>，带关键字的参数 <code>f(x=2)</code>，包装后的迭代参数 <code>f(*args)</code>，以及包装后字典参数 <code>f(**kw)</code>。</p>
+<p>Javascript 同样有多种方式处理参数：命名参数 <code>function f(x)</code>，以及在函数内部使用 <code>arguments</code> 对象处理参数，如 <code>function f() {var x = arguments[0]}</code>。函数的调用可以直接用函数名加参数 <code>f(x)</code>，也可以用 <code>call</code> 或 <code>apply</code> 方法调用。</p>
+<p>函数调用时，被传到 Python 函数中的参数时通过以下方式转换的：</p>
+<ul>
+<li>固定位置的参数保持不变</li>
+<li>元组参数会被展开成固定位置参数</li>
+<li>关键字参数包括字典参数，会被冯成一个单独的参数放在参数列表的最后一位，这个参数是一个 Javascript - 对象，该对象有两个 <code>keys</code>：<code>$nat</code> 值为 <code>"kw"</code>，<code>kw</code> 值是根据顺序排列的关键字参数的 <code>key-value</code> 对象。</li>
+</ul>
+<p>示例如下：</p>
+<pre><code class="hljs bash copyable" lang="bash">f(1, *t, x=2, **d)
+
+<span class="hljs-comment"># t=['a', 'b'], d={'z': 99} 会被转换成</span>
+
+f(1, <span class="hljs-string">'a'</span>, <span class="hljs-string">'b'</span>, {<span class="hljs-variable">$nat</span>: <span class="hljs-string">'kw'</span>, kw: {x: 2, z: 99}}})
+<span class="copy-code-btn">复制代码</span></code></pre><p>Python 函数的定义会被转换成 Javascript 函数定义，参数值使用 <code>argument</code> 对象设置在函数体的开始位置，<code>argument</code> 是通过 <code>py_utils.js</code> 中的 <code>$B.args</code> 函数设置。这个函数采用从 Python 函数初始化得来的参数：</p>
+<pre><code class="hljs javascript copyable" lang="javascript">$B.args = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">$fname, argcount, slots, var_names, $args, $dobj, extra_pos_args, extra_kw_args</span>)
+</span><span class="copy-code-btn">复制代码</span></code></pre><ul>
+<li><code>$fname</code> 是 Python 的函数名。</li>
+<li><code>argcount</code> 是函数所需命名参数的数量，不包含带默认值的参数和关键字参数。</li>
+<li><code>slots</code> 是一个 Javascript 对象，<code>key</code> 值依次是函数所需的命名参数，值都是 <code>null</code>。</li>
+<li><code>var_names</code> 是函数所需命名采纳数的列表，与 <code>Object.keys(slots)</code> 等效，出于性能原因，列表在函数主题中显示创建，而不是每次函数调用时创建。</li>
+<li><code>$args</code> 保存了传递给函数的可被遍历的参数，通常设置为 Javascript 内置的 <code>arguments</code> 对象。</li>
+<li><code>$dobj</code> 是一个保存了命名参数默认值得 Javascript 字面量，如果没有默认值就设为 <code>{}</code>。</li>
+<li><code>extra_pos_args</code> 是额外位置参数的名称，没有就是 <code>null</code>。</li>
+<li><code>extra_kw_args</code> 是二外关键词参数的名称，没有就是 <code>null</code>。</li>
+</ul>
+<p>示例如下：</p>
+<pre><code class="hljs bash copyable" lang="bash"><span class="hljs-comment"># python 函数定义</span>
+def f(x):
+
+// 转成 Javascript 函数
+var <span class="hljs-variable">$ns</span> = <span class="hljs-variable">$B</span>.args(<span class="hljs-string">'f'</span>, 1, {x: null}, [<span class="hljs-string">'x'</span>], arguments, {}, null, null)
+<span class="copy-code-btn">复制代码</span></code></pre><pre><code class="hljs bash copyable" lang="bash"><span class="hljs-comment"># python 函数定义</span>
+def f(x, y=1)
+
+// 转成 Javascript 函数
+var <span class="hljs-variable">$ns</span> = <span class="hljs-variable">$B</span>.args(<span class="hljs-string">'f'</span>, 2, {x: null, y:null}, [<span class="hljs-string">'x'</span>, <span class="hljs-string">'y'</span>], arguments, {y: 1}, null, null)
+<span class="copy-code-btn">复制代码</span></code></pre><pre><code class="hljs bash copyable" lang="bash"><span class="hljs-comment"># python 函数定义</span>
+def f(x, *t)
+
+// 转成 Javascript 函数
+var <span class="hljs-variable">$ns</span> = <span class="hljs-variable">$B</span>.args(<span class="hljs-string">'f'</span>, 1, {x: null}, [<span class="hljs-string">'x'</span>], arguments, {}, <span class="hljs-string">'t'</span>, null)
+<span class="copy-code-btn">复制代码</span></code></pre><pre><code class="hljs bash copyable" lang="bash"><span class="hljs-comment"># python 函数定义</span>
+def f(x, y=1, *t, **d)
+
+// 转成 Javascript 函数
+var <span class="hljs-variable">$ns</span> = <span class="hljs-variable">$B</span>.args(<span class="hljs-string">'f'</span>, 2, {x: null, y: null}, [<span class="hljs-string">'x'</span>, <span class="hljs-string">'y'</span>], arguments, {y: 1}, <span class="hljs-string">'t'</span>, <span class="hljs-string">'d'</span>)
+<span class="copy-code-btn">复制代码</span></code></pre><p><code>$B.args</code> 检查传递给函数的参数，并在缺少参数或意外参数时抛出异常。否则返回的对象将按传递的参数名称以及附加参数的持有者名称索引。如：在最后一个示例中，<code>$ns</code> 将包含 <code>x</code>、<code>y</code>、<code>t</code> 和 <code>d</code>。</p>
+<h3 data-id="heading-3">命名解析</h3>
+<p>一个 Python 程序会被分成几个块：模块 <code>modules</code>、函数 <code>functions</code>、类 <code>classes</code>、解析式 <code>comprehensions</code>，Brython 为每个块定义了一个 Javascript 变量，该变量将保留该块中绑定的所有者名称（成为块名称对象）。</p>
+<p>基于词法分析，包括 <code>global</code> 和 <code>nonlocal</code> 关键词，通常可以知道名称绑定在哪个块中，它被翻译为与块名称对象相同名称的属性。
+当名称被引用（如：<code>print(x)</code>）且未绑定（如：<code>x=1</code>）时，转换实际上是对 <code>check_def('a', X['a'])</code> 函数的调用，其中 <code>X</code> 是块名称对象，<code>check_def(name, obj)</code> 是一个检查 <code>obj</code> 是否定义的函数，如果未定义就会为这个名称抛出 <code>NameError</code> 或 <code>UnboundLocalError</code> 的错误。这样做是因为如果名称绑定在块中的某个位置，则在引用该名称时可能尚未绑定，如：</p>
+<pre><code class="hljs bash copyable" lang="bash"><span class="hljs-comment"># example 1 : raises NameError</span>
+def f():
+    a
+a = f()
+
+<span class="hljs-comment"># example 2 : raises NameError</span>
+class A:
+    def __init__(self):
+        a
+a = A()
+
+<span class="hljs-comment"># example 3 : raises NameError</span>
+<span class="hljs-keyword">if</span> False:
+    a = 0
+a
+
+<span class="hljs-comment"># example 4 : raises UnboundLocalError</span>
+def f():
+    <span class="hljs-keyword">if</span> False:
+        a = 9
+    a
+f()
+<span class="copy-code-btn">复制代码</span></code></pre><p>如果语法解析表示明确定义了引用名称，它将被简单的转换为 <code>X['a']</code>，这种情况是名称已在之前行的块级别中被绑定，而不是在缩进级别中，如：</p>
+<pre><code class="hljs bash copyable" lang="bash">x = 0
+<span class="hljs-built_in">print</span>(x)
+<span class="copy-code-btn">复制代码</span></code></pre><p>无法确定块的唯一情况是该程序是通过 from some_module import * 导入的，在这种情况下：</p>
+<ul>
+<li>无法知道脚本中引用的名称如 range 是内置的 range 类，还是 some_modules 导入的某个名称。</li>
+<li>如果引用了未在脚本中明确绑定的名称，那么愈发分享就无法确定是否应该引发 NameError。
+这种情况下，名称将转换为对函数的调用，改函数将在运行时根据模块实际导入的名称选择值，或引发 NameError。</li>
+</ul>
+<h3 data-id="heading-4">执行帧</h3>
+<p>Brython 通过 stack 来处理执行帧。每次程序进入一个新的模块或函数时（包括匿名行数和解析式），有关全局和局部环境的信息将置于栈顶，当函数或模块退出时，栈顶的元素会被移除。</p>
+<p>这是通过调用插入到生成的 Javascript 代码中的 enter_frame() 和 leave_frame() 函数来完成的。</p>
+<p>内置函数 globals() 和 locals() 使用该栈，并在出现异常时构建回溯信息。</p>
+<h3 data-id="heading-5">indexedDB 缓存标准库模块</h3>
+<p>这个功能需要两个条件：</p>
+<p>浏览器必须支持 indexedDB 数据库
+页面必须引用 <code>brython_stdlib.js</code>，或者 CPython 生成的简化版的 <code>brython_modules.js</code>。</p>
+<p>该功能主要是将 <code>stdlib</code> 模块的 <code>Javascript</code> 版本代码存储到 <code>indexedDB</code> 数据库中：对于每个新版本的 Brython 转换仅进行一次，生成的 Javascript 存储在客户端而不是通过网络发送，并且 <code>indexedDB</code> 可以轻松处理几兆的数据。
+不行的是，<code>indexedDB</code> 操作是异步的，而 <code>import</code> 是阻塞的。如：</p>
+<pre><code class="hljs bash copyable" lang="bash">import datetime
+<span class="hljs-built_in">print</span>(datetime.datetime.now())
+<span class="copy-code-btn">复制代码</span></code></pre><p>在运行时无法使用 <code>indexedDB</code> 获取 <code>datetime</code> 模块，因为 <code>import</code> 语句后的代码不在 <code>indexedDB</code> 异步请求完成时的回调函数中。</p>
+<p>解决方法是在转码时扫描脚本，对于源代码中的每个 <code>import</code> 语句，要导入的模块名都存储在列表中。当转码结束时，Brython 会进入一个使用任务栈的执行循环（在 <code>py2js.js</code> 中定义的函数 <code>loop()</code>）。可能的任务如下：</p>
+<ul>
+<li>调用函数 <code>inImported()</code> 检查模块是否已经在已导入的模块中，如果在则返回到 <code>loop()</code>。</li>
+<li>如果没有，添加一个任务到栈中：调用函数 <code>idb_get()</code>，该函数向 <code>indexedDB</code> 数据库发送请求，以查看 Python 模块的 Javascript 版本是否已存储，添加任务后，返回 <code>loop()</code>。</li>
+<li>在请求的回调函数中（<code>function idb_load()</code>）:
+<ul>
+<li>如果数据库存在 Javascript 版本代码，则将其存储在 Brython 变量（<code>__BRYTHON__.precompiled</code>）中，然后返回 <code>loop()</code>。</li>
+<li>否则，该模块的 Python 源码（在 <code>brython_stdlib.js</code> 中）将被转换，并添加另一个任务到堆栈中：一个存储 Javascript 代码到 <code>indexDB</code> 数据库的请求。该请求的回调函数会添加另外一个任务：调用 <code>idb_get()</code> ，这次肯定会成功。</li>
+</ul>
+</li>
+<li>该堆栈最后一个任务是执行最初的脚本。</li>
+</ul>
+<p>运行时，当导入标准库中的模块时，将执行存储在 <code>__BRYTHON__.precompiled</code> 中的 Javascript 以前已经进行了 Python 到 Javascript 的转换。</p>
+<p><em><b>缓存更新</b></em>
+<code>indexDB</code> 数据库与浏览器关联并可以在浏览器请求、关闭浏览器、重启电脑等时保持不变。当 <code>stdlib</code> 中的 Python 源码更改或转换引擎更改时，上述过程必须定义一种更新数据库中存储 Javascript 版本的方法。
+为此，缓存更新依赖时间戳，每个 Brython 版本都带有时间戳，由脚本 <code>make_dist.py</code> 更新。当 <code>stdlib</code> 中的脚本被预编译并存储在 <code>indexedDB</code> 数据库中时，数据库中的记录将时间戳字段设置为此 Brython 时间戳。如果 HTML 使用了新的 Brython 版本，它会有不同的时间戳，并在 <code>idb_load()</code> 的结果中执行新的转换。
+如果使用 <code>brython_modules.js</code> 而不是 <code>brython_stdlib.js</code>，则会定义一个补充时间戳。</p>
+<p><em><b>局限性</b></em>
+依赖对 <code>import moduleX</code>、<code>from moduleY import foo</code> 的静态语法分析来检测需要导入的模块。它不适用于使用内置函数 <code>__import__()</code> 执行导入，也不适用于传递给 <code>exec()</code> 的代码。在这些情况下，将使用先前在每次页面加载时进行即时编译的解决方案。</p>
+<p>该机制仅针对标准库中的模块或 <code>brython_modules.js</code> 中的模块实现。目前，尚未实现将其用于站点包或应用程序目录中的模块。</p>
+<hr>
+<p>原文地址：<a target="_blank" href="https://github.com/brython-dev/brython/wiki/How-Brython-works" rel="nofollow noopener noreferrer">github.com/brython-dev…</a></p>
+<p>卡内基梅隆大学在线 Python ide：<a target="_blank" href="https://academy.cs.cmu.edu/ide" rel="nofollow noopener noreferrer">academy.cs.cmu.edu/ide</a></p>
+</div> <div class="image-viewer-box" data-v-78c9b824=""><!----></div></div></article>
